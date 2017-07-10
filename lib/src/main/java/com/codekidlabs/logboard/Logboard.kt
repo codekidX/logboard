@@ -141,6 +141,7 @@ open class Logboard : Thread.UncaughtExceptionHandler {
 
             // LOGCAT
             logcat = Logcat()
+            logcat!!.description = desc.text.toString()
 
             sendButton.setOnClickListener({
 

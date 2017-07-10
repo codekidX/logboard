@@ -18,7 +18,7 @@ class Logcat {
 
     private var logBuilder: StringBuilder? = null
 
-    private val description : String = ""
+    var description : String = ""
 
 
     fun getLogcat(): String {
