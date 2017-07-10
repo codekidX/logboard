@@ -22,7 +22,7 @@ open class Logboard : Thread.UncaughtExceptionHandler {
 
     var showDialogOnCrash : Boolean = false
     var activity : Activity? = null
-    private var appIcon: Drawable? = null
+    var appIcon: Drawable? = null
 
     var sendListener : Logboard.OnSendListener? = null
 
@@ -41,7 +41,7 @@ open class Logboard : Thread.UncaughtExceptionHandler {
 
     fun show() {
 
-        Dialog().with(activity!!).setDeveloperName(activity!!.getString(R.string.app_name)).showAppIcon(appIcon!!).show(this)
+        Dialog().with(activity!!).setDeveloperName(activity!!.getString(R.string.app_name)).show(this)
     }
 
 
@@ -70,11 +70,11 @@ open class Logboard : Thread.UncaughtExceptionHandler {
     }
 
 
+
     private class Dialog {
 
         private var dialog: AlertDialog? = null
         private var activity : Activity? = null
-        private var showIcon : Drawable? = null
         private var cancelable : Boolean = true
         private var  devName: String = ""
         var logcat : Logcat? = null
@@ -82,12 +82,6 @@ open class Logboard : Thread.UncaughtExceptionHandler {
 
         fun with(activity: Activity) : Dialog {
             this.activity = activity
-
-            return this
-        }
-
-        fun showAppIcon(showIcon: Drawable) : Dialog {
-            this.showIcon = showIcon
 
             return this
         }
@@ -134,8 +128,8 @@ open class Logboard : Thread.UncaughtExceptionHandler {
             val sendButton : Button = myView.findViewById(R.id.send_button)
             val desc : EditText = myView.findViewById(R.id.problem_description)
 
-            if(appicon == null) {
-                appicon.setImageDrawable(showIcon!!)
+            if(logboard.appIcon != null) {
+                appicon.setImageDrawable(logboard.appIcon)
                 appicon.visibility = View.VISIBLE
             }
 
