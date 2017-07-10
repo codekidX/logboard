@@ -36,7 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
-            logboard.setLogboardIcon(ContextCompat.getDrawable(applicationContext, R.mipmap.ic_launcher))
+            logboard.appIcon = ContextCompat.getDrawable(applicationContext, R.mipmap.ic_launcher)
+            logboard.tipIconColor = ContextCompat.getColor(applicationContext, R.color.colorPrimary)
             logboard.show()
 
 

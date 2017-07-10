@@ -2,7 +2,9 @@ package com.codekidlabs.logboard
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +25,7 @@ open class Logboard : Thread.UncaughtExceptionHandler {
     var showDialogOnCrash : Boolean = false
     var activity : Activity? = null
     var appIcon: Drawable? = null
+    var tipIconColor : Int = 0
 
     var sendListener : Logboard.OnSendListener? = null
 
@@ -31,12 +34,6 @@ open class Logboard : Thread.UncaughtExceptionHandler {
             throwable.printStackTrace()
         else
             show()
-    }
-
-
-
-    fun setLogboardIcon(drawable: Drawable) {
-        this.appIcon = drawable
     }
 
     fun show() {
@@ -125,8 +122,13 @@ open class Logboard : Thread.UncaughtExceptionHandler {
 
         private fun initUi(myView: View, logboard: Logboard) {
             val appicon : ImageView = myView.findViewById(R.id.app_icon)
+            val tipIcon : ImageView = myView.findViewById(R.id.tip_image)
             val sendButton : Button = myView.findViewById(R.id.send_button)
             val desc : EditText = myView.findViewById(R.id.problem_description)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tipIcon.imageTintList = ColorStateList.valueOf(logboard.tipIconColor)
+            }
 
             if(logboard.appIcon != null) {
                 appicon.setImageDrawable(logboard.appIcon)
