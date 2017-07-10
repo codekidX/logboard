@@ -11,26 +11,43 @@ class Logcat {
 
     // Commands
     val COMMAND_LOGCAT: String = "logcat -d"
+    val COMMAND_DEVICE_SDK: String = "getprop ro.build.version.release"
+    val COMMAND_DEVICE: String = "getprop ro.product.device"
+    val COMMAND_DEVICE_BOARD: String = "getprop ro.product.board"
     val NEW_LINE: String = "\n"
 
     private var logBuilder: StringBuilder? = null
 
+    private val description : String = ""
+
 
     fun getLogcat(): String {
         logBuilder = StringBuilder()
-        logBuilder!!.appendBlank()
 
+        injectDescription()
+        getDeviceInfo()
         getLog()
 
         return logBuilder.toString()
 
     }
 
-//    private fun getDeviceInfo() : String {
-//
-//    }
+    private fun injectDescription() {
+        logBuilder!!.appendLine("Problem statement from user: ")
+        logBuilder!!.appendLine(description)
+        logBuilder!!.appendBlank()
+    }
+
+    private fun getDeviceInfo() {
+        logBuilder!!.appendLine("Device Information: ")
+        processOutput(createProcess(COMMAND_DEVICE_SDK))
+        processOutput(createProcess(COMMAND_DEVICE))
+        processOutput(createProcess(COMMAND_DEVICE_BOARD))
+        logBuilder!!.appendBlank()
+    }
 
     private fun getLog() {
+        logBuilder!!.appendLine("Logcat: ")
         return processOutput(createProcess(COMMAND_LOGCAT))
     }
 
@@ -52,7 +69,7 @@ class Logcat {
     * */
 
     fun StringBuilder.appendLine(log: String) = this.append(log + NEW_LINE)
-    fun StringBuilder.appendBlank() = this.append(NEW_LINE + NEW_LINE + NEW_LINE)
+    fun StringBuilder.appendBlank() = this.append(NEW_LINE + NEW_LINE)
 
     val BufferedReader.output: Iterator<String>
         get() = object : Iterator<String> {

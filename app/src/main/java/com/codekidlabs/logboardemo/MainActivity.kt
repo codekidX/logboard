@@ -1,5 +1,7 @@
 package com.codekidlabs.logboardemo
 
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
@@ -9,6 +11,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.codekidlabs.logboard.Logboard
+import android.content.ClipData
+import android.widget.ImageView
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +31,9 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
+        val appIcon = findViewById(R.id.app_icon) as ImageView
+        appIcon.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.mipmap.ic_launcher))
+
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
             logboard.setLogboardIcon(ContextCompat.getDrawable(applicationContext, R.mipmap.ic_launcher))
@@ -36,7 +44,11 @@ class MainActivity : AppCompatActivity() {
 
                 // detailed log is obtained from logcat variable
                 override fun onSend(logcat : String) {
-                    Toast.makeText(applicationContext, "Logboard says " + logcat, Toast.LENGTH_SHORT).show()
+                    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("Logboard", logcat)
+                    clipboard.primaryClip = clip
+
+                    Toast.makeText(applicationContext, "Logboard copied to Clipboard", Toast.LENGTH_SHORT).show()
                 }
 
             }

@@ -7,7 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+
 
 /**
  * @class Loboard class for receiving uncaught exceptions
@@ -37,13 +40,6 @@ open class Logboard : Thread.UncaughtExceptionHandler {
     }
 
     fun show() {
-        if(sendListener == null)
-            sendListener = object : Logboard.OnSendListener {
-                override fun onSend(logcat: String) {
-                    Log.i(TAG, "You need to set-up Logboard.OnSendListener")
-                }
-
-            }
 
         Dialog().with(activity!!).setDeveloperName(activity!!.getString(R.string.app_name)).showAppIcon(appIcon!!).show(this)
     }
@@ -81,6 +77,7 @@ open class Logboard : Thread.UncaughtExceptionHandler {
         private var showIcon : Drawable? = null
         private var cancelable : Boolean = true
         private var  devName: String = ""
+        var logcat : Logcat? = null
 
 
         fun with(activity: Activity) : Dialog {
@@ -135,18 +132,27 @@ open class Logboard : Thread.UncaughtExceptionHandler {
         private fun initUi(myView: View, logboard: Logboard) {
             val appicon : ImageView = myView.findViewById(R.id.app_icon)
             val sendButton : Button = myView.findViewById(R.id.send_button)
+            val desc : EditText = myView.findViewById(R.id.problem_description)
+
+            appicon.setImageDrawable(showIcon!!)
+            appicon.visibility = View.VISIBLE
+
+            // LOGCAT
+            logcat = Logcat()
 
             sendButton.setOnClickListener({
 
-                val logcat = Logcat()
-
-
-                logboard.sendListener!!.onSend("logcat : " + logcat.getLogcat())
+                // if not send listener set call getDefaultSendListener()
+                if(logboard.sendListener == null) {
+                    Toast.makeText(activity!!, "You need to set-up OnSendListener.", Toast.LENGTH_SHORT).show()
+                } else {
+                    logboard.sendListener!!.onSend(logcat!!.getLogcat())
+                }
 
                 dialog!!.cancel()
             })
 
-                appicon.setImageDrawable(showIcon!!)
+
         }
 
         fun show(logboard: Logboard) {
