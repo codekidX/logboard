@@ -134,8 +134,10 @@ open class Logboard : Thread.UncaughtExceptionHandler {
             val sendButton : Button = myView.findViewById(R.id.send_button)
             val desc : EditText = myView.findViewById(R.id.problem_description)
 
-            appicon.setImageDrawable(showIcon!!)
-            appicon.visibility = View.VISIBLE
+            if(appicon == null) {
+                appicon.setImageDrawable(showIcon!!)
+                appicon.visibility = View.VISIBLE
+            }
 
             // LOGCAT
             logcat = Logcat()
